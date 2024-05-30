@@ -1,6 +1,27 @@
+import { useState } from 'react';
 import classes from './calendar.module.css';
+import moment from 'moment';
 
 export const Calendar = (props) => {
+
+	const [selectedDay, setSelectedDay] = useState(false);
+
+	const handleDateClick = event => {
+		if (!event.target.className.includes('ui-datepicker-current-month')) {
+			return;
+		}
+
+		setSelectedDay(!selectedDay);
+
+		event.target.parentElement.parentElement.childNodes.forEach(week => {
+			week.childNodes.forEach(node => {
+				node.style.outline = '';
+			});
+		});
+
+		event.target.style.outline = selectedDay ? 'solid 2px var(--dark-blue)' : '';
+	}
+
 	const monthNames = [
 		'Январь',
 		'Февраль',
@@ -48,129 +69,43 @@ export const Calendar = (props) => {
 		'Сб'
 	];
 
-	const currentDate = props.date;
-	const currentYear = currentDate.getFullYear();
-	const currentMonth = currentDate.getMonth();
-	const currentDay = currentDate.getDate();
-	const dayWeek = dayNames[currentDate.getDay()];
+	moment.updateLocale('en', { week: { dow: 1 } });
+	let currentDate = props.date;
+	let currentYear = currentDate.getFullYear();
+	let currentMonth = currentDate.getMonth() + 1;
+	let currentDay = currentDate.getDate();
+	let dayWeek = dayNames[currentDate.getDay()];
 
-	const monthMayData = [
-		[
-			{ day: 29, month: 'another', class: 'ui-datepicker-other-month' },
-			{ day: 30, month: 'another', class: 'ui-datepicker-other-month' },
-			{ day: 1, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 2, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 3, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 4, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 5, month: 'current', class: 'ui-datepicker-current-month' }
-		],
-		[
-			{ day: 6, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 7, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 8, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 9, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 10, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 11, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 12, month: 'current', class: 'ui-datepicker-current-month' }
-		],
-		[
-			{ day: 13, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 14, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 15, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 16, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 17, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 18, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 19, month: 'current', class: 'ui-datepicker-current-month' }
-		],
-		[
-			{ day: 20, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 21, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 22, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 23, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 24, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 25, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 26, month: 'current', class: 'ui-datepicker-current-month' }
-		],
-		[
-			{ day: 27, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 28, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 29, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 30, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 31, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 1, month: 'another', class: 'ui-datepicker-other-month' },
-			{ day: 2, month: 'another', class: 'ui-datepicker-other-month' }
-		],
-	];
-	const monthJuneData = [
-		[
-			{ day: 27, month: 'another', class: 'ui-datepicker-other-month' },
-			{ day: 28, month: 'another', class: 'ui-datepicker-other-month' },
-			{ day: 29, month: 'another', class: 'ui-datepicker-other-month' },
-			{ day: 30, month: 'another', class: 'ui-datepicker-other-month' },
-			{ day: 31, month: 'another', class: 'ui-datepicker-other-month' },
-			{ day: 1, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 2, month: 'current', class: 'ui-datepicker-current-month' },
-		],
-		[
-			{ day: 3, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 4, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 5, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 6, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 7, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 8, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 9, month: 'current', class: 'ui-datepicker-current-month' },
-		],
-		[
-			{ day: 10, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 11, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 12, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 13, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 14, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 15, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 16, month: 'current', class: 'ui-datepicker-current-month' },
-		],
-		[
-			{ day: 17, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 18, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 19, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 20, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 21, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 22, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 23, month: 'current', class: 'ui-datepicker-current-month' },
-		],
-		[
-			{ day: 24, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 25, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 26, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 27, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 28, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 29, month: 'current', class: 'ui-datepicker-current-month' },
-			{ day: 30, month: 'current', class: 'ui-datepicker-current-month' },
-		],
-	];
+	
+	const monthAllData = [];
 	const monthData = [];
 
-	switch (currentMonth) {
-		case 4:
-			monthMayData.forEach((week) => {
-				monthData.push(week);
-			});
-			break;
-		case 5:
-			monthJuneData.forEach((week) => {
-				monthData.push(week);
-			});
-			break;
-	}
-	console.log(currentDay)
-
-	for (let i = 0; i < monthData.length; i++) {
-		monthData[i].forEach(day => {
-			if (day.day === currentDay && day.class === 'ui-datepicker-current-month') {
-				day.class = 'ui-datepicker-today';
+	function parseData() {
+		const startDay = moment(currentYear + '-' + currentMonth + '-' + currentDay).startOf('month').startOf('week');
+		const endDay = moment(currentYear + '-' + currentMonth + '-' + currentDay).endOf('month').endOf('week');
+		let dayCounter = startDay
+		while (!dayCounter.isAfter(endDay)) {
+			if (+moment(dayCounter).format('DD') === currentDay &&
+				+moment(dayCounter).format('MM') === currentMonth) {
+				monthAllData.push({ day: dayCounter.format('DD'), moment: dayCounter, class: 'ui-datepicker-today' });
+			} else if (+moment(dayCounter).format('MM') !== currentMonth) {
+				monthAllData.push({ day: dayCounter.format('DD'), moment: dayCounter, class: 'ui-datepicker-other-month' });
+			} else {
+				monthAllData.push({ day: dayCounter.format('DD'), moment: dayCounter, class: 'ui-datepicker-current-month' });
 			}
-		});
+			dayCounter.add(1, 'd');
+		}
+	
+		let sliceStart = 0;
+		let sliceEnd = 7;
+		for (let i = 0; i < monthAllData.length / 7; i++) {
+			monthData.push(monthAllData.slice(sliceStart, sliceEnd));
+			sliceStart += 7;
+			sliceEnd += 7;
+		}
 	}
+
+	parseData();
 
 	return (
 		<div className={classes["ui-datepicker"]}>
@@ -205,11 +140,13 @@ export const Calendar = (props) => {
 						)}
 					</tr>
 				</thead>
-				<tbody>
+				<tbody onClick={handleDateClick}>
 					{monthData.map((week, index) =>
 						<tr>
 							{monthData[index].map((dayWeek) =>
-								<td className={classes[dayWeek.class]}>{dayWeek.day}</td>
+								<td className={classes[dayWeek.class]}>
+									{+dayWeek.day}
+								</td>
 							)}
 						</tr>
 					)}

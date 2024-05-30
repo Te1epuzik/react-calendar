@@ -81,7 +81,14 @@
 }
 
 .ui-datepicker-current-month {
+	outline-offset: -2px;
 	cursor: pointer;
+	user-select: none;
+}
+
+.ui-datepicker-current-month:hover {
+	outline: solid 2px var(--gray);
+	outline-offset: -4px;
 }
 
 .ui-datepicker-today {
