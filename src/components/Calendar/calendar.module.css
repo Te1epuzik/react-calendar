@@ -95,3 +95,11 @@
 	color: var(--white);
 	background-color: var(--dark-blue);
 }
+
+.ui-datepicker--selected {
+	outline: solid 2px var(--dark-blue);
+}
+
+.ui-datepicker--selected:hover {
+	outline: solid 2px var(--dark-blue);
+}

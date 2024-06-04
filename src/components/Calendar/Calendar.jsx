@@ -4,22 +4,16 @@ import moment from 'moment';
 
 export const Calendar = (props) => {
 
-	const [selectedDay, setSelectedDay] = useState(false);
+	const [selectedDay, setSelectedDay] = useState({
+		week: null,
+		day: null
+	});
 
-	const handleDateClick = event => {
-		if (!event.target.className.includes('ui-datepicker-current-month')) {
-			return;
-		}
-
-		setSelectedDay(!selectedDay);
-
-		event.target.parentElement.parentElement.childNodes.forEach(week => {
-			week.childNodes.forEach(node => {
-				node.style.outline = '';
-			});
-		});
-
-		event.target.style.outline = selectedDay ? 'solid 2px var(--dark-blue)' : '';
+	const handleDateClick = (index, indexWeek) => {
+		setSelectedDay({
+			week: indexWeek,
+			day: index
+		});;
 	}
 
 	const monthNames = [
@@ -70,13 +64,13 @@ export const Calendar = (props) => {
 	];
 
 	moment.updateLocale('en', { week: { dow: 1 } });
-	let currentDate = props.date;
-	let currentYear = currentDate.getFullYear();
-	let currentMonth = currentDate.getMonth() + 1;
-	let currentDay = currentDate.getDate();
-	let dayWeek = dayNames[currentDate.getDay()];
+	const currentDate = props.date;
+	const currentYear = currentDate.getFullYear();
+	const currentMonth = currentDate.getMonth() + 1;
+	const currentDay = currentDate.getDate();
+	const dayWeek = dayNames[currentDate.getDay()];
 
-	
+
 	const monthAllData = [];
 	const monthData = [];
 
@@ -95,7 +89,7 @@ export const Calendar = (props) => {
 			}
 			dayCounter.add(1, 'd');
 		}
-	
+
 		let sliceStart = 0;
 		let sliceEnd = 7;
 		for (let i = 0; i < monthAllData.length / 7; i++) {
@@ -136,15 +130,22 @@ export const Calendar = (props) => {
 				<thead>
 					<tr>
 						{dayNames.map((name, index) =>
-							<th scope="col" title={name} className={classes['ui-datepicker-week-names']}>{dayNamesAbbr[index]}</th>
+							<th key={index} scope="col" title={name} className={classes['ui-datepicker-week-names']}>{dayNamesAbbr[index]}</th>
 						)}
 					</tr>
 				</thead>
-				<tbody onClick={handleDateClick}>
-					{monthData.map((week, index) =>
-						<tr>
-							{monthData[index].map((dayWeek) =>
-								<td className={classes[dayWeek.class]}>
+				<tbody>
+					{monthData.map((week, indexWeek) =>
+						<tr key={indexWeek}>
+							{week.map((dayWeek, index) =>
+								<td
+									key={index}
+									className={
+										`${classes[dayWeek.class]} ${selectedDay.day === index &&
+											selectedDay.week === indexWeek &&
+											dayWeek.class.includes('ui-datepicker-current-month') ?
+											classes['ui-datepicker--selected'] : ''}`}
+									onClick={() => handleDateClick(index, indexWeek)}>
 									{+dayWeek.day}
 								</td>
 							)}
